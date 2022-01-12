@@ -1,6 +1,6 @@
 ---
 title: "Biostat 203B Homework 1"
-author: Your Name
+author: Yi Fang
 subtitle: Due Jan 21 @ 11:59PM
 output: html_document
 ---
