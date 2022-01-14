@@ -78,7 +78,7 @@ Display the number of lines in each data file using a similar loop.
     ```{bash}
     for datafile in /mnt/mimiciv/1.0/core/*.gz
       do
-         wc -l $datafile
+         zcat $datafile | wc -l
       done
     ```
         
@@ -90,12 +90,13 @@ Display the number of lines in each data file using a similar loop.
     ```
 
     ```{bash}
-   awk 'END { print NR }' /mnt/mimiciv/1.0/core/admissions.csv.gz
+   zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk 'END { print NR }' 
     ```
-    
+There are 523741 rows in this data file, including the title row.   
     ```{bash}
 zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{if(NR>1){print $1} }' | sort | uniq | wc -l
     ```
+There are 256878 unique patients in this data file.
 
 6. What are the possible values taken by each of the variable `admission_type`, `admission_location`, `insurance`, and `ethnicity`? Also report the count for each unique value of these variables. (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `uniq -c`, `wc`, and so on.)
 
