@@ -72,9 +72,7 @@ Please, do **not** put these data files into Git; they are big. Do **not** copy 
     ```
 
 **The output of the bash script lists files ending with .gz in the core folder.**
-
 Display the number of lines in each data file using a similar loop.
-
     ```{bash}
     for datafile in /mnt/mimiciv/1.0/core/*.gz
       do
@@ -82,7 +80,6 @@ Display the number of lines in each data file using a similar loop.
       done
     ```
         
-    
 5. Display the first few lines of `admissions.csv.gz`. How many rows are in this data file? How many unique patients (identified by `subject_id`) are in this data file? (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `sort`, `uniq`, `wc`, and so on.)
 
     ```{bash}
@@ -100,8 +97,23 @@ There are 256878 unique patients in this data file.
 
 6. What are the possible values taken by each of the variable `admission_type`, `admission_location`, `insurance`, and `ethnicity`? Also report the count for each unique value of these variables. (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `uniq -c`, `wc`, and so on.)
 
-
-
+**Admission_type**
+    ```{bash}
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{if(NR>1){print $6} }' | sort | uniq -c
+    ```
+**Admission_location**
+    ```{bash}
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{if(NR>1){print $7} }' | sort | uniq -c
+    ```
+**Insurance**
+    ```{bash}
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{if(NR>1){print $9} }' | sort | uniq -c
+    ```
+**Ethnicity**
+    ```{bash}
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{if(NR>1){print $12} }' | sort | uniq -c
+    ```
+    
 ## Q4. Who's popular in Price and Prejudice
 
 1. You and your friend just have finished reading *Pride and Prejudice* by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <http://www.gutenberg.org/cache/epub/42671/pg42671.txt> and save to your local folder. 
