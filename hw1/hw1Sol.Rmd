@@ -51,7 +51,17 @@ Please, do **not** put these data files into Git; they are big. Do **not** copy 
 
 2. Display the contents in the folders `core`, `hosp`, `icu`. Why are these data files distributed as `.csv.gz` files instead of `.csv` (comma separated values) files? Read the page <https://mimic.mit.edu/docs/iv/> to understand what's in each folder.
 
+    ```{bash}
+    ls -l /mnt/mimiciv/1.0/core
+    ls -l /mnt/mimiciv/1.0/hosp
+    ls -l /mnt/mimiciv/1.0/icu
+    ```
+
+**These CSV. GZ is a CSV file compressed with gzip utility, which means these are all compressed files.**
+
 3. Briefly describe what bash commands `zcat`, `zless`, `zmore`, and `zgrep` do.
+
+**These commands do the same thing when it does not contain the `z`, but they are just for compressed file. For example, the `zcat` command allows the user to expand and view a compressed file without uncompressing that file. `zless` and `zmore` shows a text file screen by screen without uncompressing it. `zgrep` can search the contents of a compressed file without uncompressing it.**
 
 4. What's the output of following bash script?
     ```{bash, eval=F}
@@ -60,11 +70,36 @@ Please, do **not** put these data files into Git; they are big. Do **not** copy 
         ls -l $datafile
       done
     ```
+
+**The output of the bash script lists files ending with .gz in the core folder.**
+
 Display the number of lines in each data file using a similar loop.
 
+    ```{bash}
+    for datafile in /mnt/mimiciv/1.0/core/*.gz
+      do
+         wc -l $datafile
+      done
+    ```
+        
+    
 5. Display the first few lines of `admissions.csv.gz`. How many rows are in this data file? How many unique patients (identified by `subject_id`) are in this data file? (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `sort`, `uniq`, `wc`, and so on.)
 
+    ```{bash}
+   zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | head -6
+    ```
+
+    ```{bash}
+   awk 'END { print NR }' /mnt/mimiciv/1.0/core/admissions.csv.gz
+    ```
+    
+    ```{bash}
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{if(NR>1){print $1} }' | sort | uniq | wc -l
+    ```
+
 6. What are the possible values taken by each of the variable `admission_type`, `admission_location`, `insurance`, and `ethnicity`? Also report the count for each unique value of these variables. (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `uniq -c`, `wc`, and so on.)
+
+
 
 ## Q4. Who's popular in Price and Prejudice
 
