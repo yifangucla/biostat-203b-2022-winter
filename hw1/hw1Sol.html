@@ -352,17 +352,25 @@ zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{if(NR&gt;1){print $
 <ol style="list-style-type: decimal">
 <li><p>You and your friend just have finished reading <em>Pride and Prejudice</em> by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <a href="http://www.gutenberg.org/cache/epub/42671/pg42671.txt" class="uri">http://www.gutenberg.org/cache/epub/42671/pg42671.txt</a> and save to your local folder.</p>
 <pre class="bash"><code>wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt</code></pre>
-<p>Explain what <code>wget -nc</code> does. Do <strong>not</strong> put this text file <code>pg42671.txt</code> in Git. Complete the following loop to tabulate the number of times each of the four characters is mentioned using Linux commands. <code>wget -nc</code> retrieve the file and download it into the folder.</p>
-<pre class="bash"><code>wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
+<p>Explain what <code>wget -nc</code> does. Do <strong>not</strong> put this text file <code>pg42671.txt</code> in Git. Complete the following loop to tabulate the number of times each of the four characters is mentioned using Linux commands.</p></li>
+</ol>
+<p><strong><code>wget -nc</code> retrieve and download the file from the link.</strong></p>
+<pre><code>```bash
+wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
 for char in Elizabeth Jane Lydia Darcy
 do
   echo $char: 
-  wc -m
-done</code></pre></li>
+  grep -o -i $char pg42671.txt | wc -l
+done
+```</code></pre>
+<ol start="2" style="list-style-type: decimal">
 <li><p>What’s the difference between the following two commands?</p>
 <pre class="bash"><code>echo &#39;hello, world&#39; &gt; test1.txt</code></pre>
 <p>and</p>
 <pre class="bash"><code>echo &#39;hello, world&#39; &gt;&gt; test2.txt</code></pre></li>
+</ol>
+<p>“&gt;” and “&gt;&gt;” both represent output redirection in Linux. The “&gt;” is the output redirection operator used for overwriting files that already exist in the directory. While, the “&gt;&gt;” is an output operator as well, but, it appends the data of an existing file.</p>
+<ol start="3" style="list-style-type: decimal">
 <li><p>Using your favorite text editor (e.g., <code>vi</code>), type the following and save the file as <code>middle.sh</code>:</p>
 <pre class="bash"><code>#!/bin/sh
 # Select lines from the middle of a file.
@@ -372,9 +380,26 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <pre class="bash"><code>./middle.sh pg42671.txt 20 5</code></pre>
 <p>Explain the output. Explain the meaning of <code>&quot;$1&quot;</code>, <code>&quot;$2&quot;</code>, and <code>&quot;$3&quot;</code> in this shell script. Why do we need the first line of the shell script?</p></li>
 </ol>
+<p>The output shows the 16 to 20 rows of the text file, which is exactly as described that it shows “select lines from the middle of a file” by typing the <code>end_line</code> and <code>num_lines</code>. <code>&quot;$1&quot;</code>, <code>&quot;$2&quot;</code>, and <code>&quot;$3&quot;</code> in this shell script means the first, second, and third variable. the hash-bang (#!) tells the operating system what interpreter to use to run the script. In this case it’s /bin/sh.</p>
 <div id="q5.-more-fun-with-linux" class="section level3">
 <h3>Q5. More fun with Linux</h3>
 <p>Try following commands in Bash and interpret the results: <code>cal</code>, <code>cal 2021</code>, <code>cal 9 1752</code> (anything unusual?), <code>date</code>, <code>hostname</code>, <code>arch</code>, <code>uname -a</code>, <code>uptime</code>, <code>who am i</code>, <code>who</code>, <code>w</code>, <code>id</code>, <code>last | head</code>, <code>echo {con,pre}{sent,fer}{s,ed}</code>, <code>time sleep 5</code>, <code>history | tail</code>.</p>
+<p><code>cal</code> shows the calender of this month and today.</p>
+<p><code>cal 2021</code> shows the calender of 2021.</p>
+<p><code>cal 9 1752</code> shows September of 1752, but it it has the ‘lost’ 11 days of September 1752, skipped when Britain changed over from the Julian calendar to the Gregorian calendar, bringing us into line with most of Europe.</p>
+<p><code>date</code>shows the date and time now.</p>
+<p><code>hostname</code>shows the host name of server.</p>
+<p><code>arch</code> prints out the current operating system.</p>
+<p><code>uname -a</code> shows the name, version and other details about the current machine and the operating system running on it.</p>
+<p><code>uptime</code> shows information about how long the system has been running together with the current time and users.</p>
+<p><code>who am i</code> shows the name of the user and the time.</p>
+<p><code>who</code> shows the information about currently logged in user on to system.</p>
+<p><code>w</code> show who is logged on and what they are doing in the server.</p>
+<p><code>id</code> shows the uid gid and groupid of me.</p>
+<p><code>last | head</code>: <code>last</code> display the list of all the users logged in and out, and <code>head</code> shows the first 10 records.</p>
+<p><code>echo {con,pre}{sent,fer}{s,ed}</code> shows the different combination of words using <code>con,pre</code> <code>sent,fer</code> and <code>s,ed</code>.</p>
+<p><code>time sleep 5</code>: <code>sleep</code> let the system delay for 5 second, and <code>time</code> shows the real-time, user CPU time and system CPU time spent by executing a command when it terminates.</p>
+<p><code>history | tail</code> shows the last few history command.</p>
 </div>
 </div>
 
