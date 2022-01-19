@@ -156,6 +156,10 @@ Using `chmod` make the file executable by the owner, and run
     ```
 Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this shell script. Why do we need the first line of the shell script?
 
+The output shows the 16 to 20 rows of the text file, which is exactly as described that it shows "select lines from the middle of a file" by typing the `end_line` and `num_lines`.
+`"$1"`, `"$2"`, and `"$3"` in this shell script means the first, second, and third variable.
+the hash-bang (#!) tells the operating system what interpreter to use to run the script. In this case it's /bin/sh.
+
 ### Q5. More fun with Linux
 
 Try following commands in Bash and interpret the results: `cal`, `cal 2021`, `cal 9 1752` (anything unusual?), `date`, `hostname`, `arch`, `uname -a`, `uptime`, `who am i`, `who`, `w`, `id`, `last | head`, `echo {con,pre}{sent,fer}{s,ed}`, `time sleep 5`, `history | tail`.
