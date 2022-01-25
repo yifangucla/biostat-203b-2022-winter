@@ -77,9 +77,25 @@ system(
 
 1. Import `icustatys.csv.gz` as a tibble `icustays_tble`. 
 
+```{r}
+icustays <- read_csv("/mnt/mimiciv/1.0/icu/icustays.csv.gz", show_col_types = FALSE)
+icustays_tble <- tibble(icustays)
+is_tibble(icustays_tble)
+```
+
 2. How many unique `subject_id`? Can a `subject_id` have multiple ICU stays? 
 
+```{r}
+n_distinct(icustays_tble$subject_id)
+head(count(icustays_tble, `subject_id`))
+```
+There are 53150 unique `subject_id` and a `subject_id` can have multiple ICU stays.
+
 3. For each `subject_id`, let's only keep the first ICU stay in the tibble `icustays_tble`.
+
+```{r}
+icustays_tble <- distinct(icustays_tble, subject_id, .keep_all = TRUE)
+```
 
 ## Q3. `admission` data
 
@@ -96,9 +112,15 @@ system(
 ```
 
 1. Import `admissions.csv.gz` as a tibble `admissions_tble`.
-
+```{r}
+admissions_df <- read_csv(admissions, show_col_types = FALSE)
+admissions_tble <- tibble(admissions_df)
+is_tibble(admissions_tble)
+```
 2. Let's only keep the admissions that have a match in `icustays_tble` according to `subject_id` and `hadmi_id`.
-
+```{r}
+admissions_tble <- semi_join(admissions_tble, icustays_tble, by = c("subject_id", "hadm_id"))
+```
 3. Summarize the following variables by graphics. 
 
 - admission year  
@@ -106,6 +128,61 @@ system(
 - admission month day  
 - admission week day  
 - admission hour (anything unusual?)  
+
+```{r}
+adyearplot <-
+  ggplot(admissions_tble) +
+  geom_density(aes(year(admittime))) +
+  labs(x="year", y="frequency",
+         title="ICU Annually Admission Frequency Table") +
+  theme(plot.title = element_text(hjust = 0.5))
+adyearplot
+```
+```{r}
+admonthplot <-
+  ggplot(admissions_tble) +
+  geom_bar(aes(month(admittime, label = TRUE)),
+           fill="skyblue",
+           width = 0.6) +
+  labs(x="month", y="frequency",
+         title="ICU Admission Frequency by Month") +
+  theme(plot.title = element_text(hjust = 0.5))
+admonthplot
+```
+```{r}
+admdayplot <-
+  ggplot(admissions_tble) +
+  geom_bar(aes(mday(admittime)),
+           fill="skyblue",
+           width = 0.6) +
+  labs(x="Day", y="frequency",
+         title="ICU Admission Frequency by Day") +
+  theme(plot.title = element_text(hjust = 0.5))
+admdayplot
+```
+```{r}
+adwkdayplot <-
+  ggplot(admissions_tble) +
+  geom_bar(aes(wday(admittime, label = TRUE, abbr = FALSE)),
+           fill="skyblue",
+           width = 0.6) +
+  labs(x="Week Day", y="frequency",
+         title="ICU Admission Frequency by Week Day") +
+  theme(plot.title = element_text(hjust = 0.5))
+adwkdayplot
+```
+```{r}
+adhourplot <-
+  ggplot(admissions_tble) +
+  geom_bar(aes(hour(admittime)),
+           fill="skyblue",
+           width = 0.6) +
+  labs(x="Hour", y="frequency",
+         title="ICU Admission Frequency by Hour") +
+  theme(plot.title = element_text(hjust = 0.5))
+adhourplot
+```
+There is an unusual burst in ICU admission at 0 in the night, and I do not know why.
 
 ## Q4. `patients` data
 
