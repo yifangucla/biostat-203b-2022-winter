@@ -199,8 +199,33 @@ system(
 ```
 
 1. Import `patients.csv.gz` (<https://mimic.mit.edu/docs/iv/modules/core/patients/>) as a tibble `patients_tble` and only keep the patients who have a match in `icustays_tble` (according to `subject_id`).
-
+```{r}
+patients_df <-  read_csv("/mnt/mimiciv/1.0/core/patients.csv.gz", show_col_types = FALSE)
+patients_tble <- tibble(patients_df)
+patients_tble <- semi_join(patients_tble, icustays_tble, by = "subject_id")
+```
 2. Summarize variables `gender` and `anchor_age`, and explain any patterns you see.
+```{r}
+genderageplot <-
+  ggplot(patients_tble) +
+  geom_density(aes(x = anchor_age)) +
+  labs(x="Age", y="Frequency",
+         title="ICU Admission Age Frequency Table") +
+  theme(plot.title = element_text(hjust = 0.5))
+genderageplot
+```
+From this graph, I can tell that ICU has a high average age and the peak is around 67 years old. The chance of getting into ICU between 20 to 40 is low and are about the same. After 40 years old, it becomes more and more easier to get into ICU when the age increases.
+
+```{r}
+genderageplot <-
+  ggplot(patients_tble) +
+  geom_boxplot(aes(x = anchor_age, y=gender)) +
+  labs(x="Age", y="Gender",
+         title="ICU Admission Gender and Age Box Plot") +
+  theme(plot.title = element_text(hjust = 0.5))
+genderageplot
+```
+From this graph, I can tell that female has a higher mean age of getting into ICU than male, and male gets into ICU earlier than female in their life on average. This is probably a side proof that female has a higher average lifetime than man do （because if you get into ICU later, it means that you are healthier.)
 
 ## Q5. Lab results
 
