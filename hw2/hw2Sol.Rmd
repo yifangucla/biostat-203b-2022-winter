@@ -45,17 +45,17 @@ Which function is fastest? Is there difference in the (default) parsed data type
 ```{r}
 admissions <- "/mnt/mimiciv/1.0/core/admissions.csv.gz"
 #Base R
-system.time( read.csv(admissions) )
+system.time(read.csv(admissions))
 ```
 ```{r}
 admissions <- "/mnt/mimiciv/1.0/core/admissions.csv.gz"
 #Tidyverse
-system.time( read.csv(admissions) )
+system.time(read.csv(admissions))
 ```
 ```{r}
 admissions <- "/mnt/mimiciv/1.0/core/admissions.csv.gz"
 #fread
-system.time( fread(admissions) )
+system.time(fread(admissions))
 ```
 The base R use 40.8 seconds, tidyverse use 35.1 seconds, and 'fread' use 1.3 seconds. Fread is the fastest. I think the reason is that these commands work differently and 'fread' tries to first read rows into memory as character and then tries to convert them into integer and factor as data types.
 
@@ -133,8 +133,8 @@ admissions_tble <- semi_join(admissions_tble, icustays_tble, by = c("subject_id"
 adyearplot <-
   ggplot(admissions_tble) +
   geom_density(aes(year(admittime))) +
-  labs(x="year", y="frequency",
-         title="ICU Annually Admission Frequency Table") +
+  labs(x = "year", y = "frequency",
+  title = "ICU Annually Admission Frequency Table") +
   theme(plot.title = element_text(hjust = 0.5))
 adyearplot
 ```
@@ -142,10 +142,10 @@ adyearplot
 admonthplot <-
   ggplot(admissions_tble) +
   geom_bar(aes(month(admittime, label = TRUE)),
-           fill="skyblue",
-           width = 0.6) +
-  labs(x="month", y="frequency",
-         title="ICU Admission Frequency by Month") +
+  fill = "skyblue",
+  width = 0.6) +
+  labs(x = "month", y = "frequency",
+  title = "ICU Admission Frequency by Month") +
   theme(plot.title = element_text(hjust = 0.5))
 admonthplot
 ```
@@ -153,10 +153,10 @@ admonthplot
 admdayplot <-
   ggplot(admissions_tble) +
   geom_bar(aes(mday(admittime)),
-           fill="skyblue",
-           width = 0.6) +
-  labs(x="Day", y="frequency",
-         title="ICU Admission Frequency by Day") +
+  fill = "skyblue",
+  width = 0.6) +
+  labs(x = "Day", y = "frequency",
+  title = "ICU Admission Frequency by Day") +
   theme(plot.title = element_text(hjust = 0.5))
 admdayplot
 ```
@@ -164,10 +164,10 @@ admdayplot
 adwkdayplot <-
   ggplot(admissions_tble) +
   geom_bar(aes(wday(admittime, label = TRUE, abbr = FALSE)),
-           fill="skyblue",
-           width = 0.6) +
-  labs(x="Week Day", y="frequency",
-         title="ICU Admission Frequency by Week Day") +
+  fill = "skyblue",
+  width = 0.6) +
+  labs(x = "Week Day", y = "frequency",
+  title = "ICU Admission Frequency by Week Day") +
   theme(plot.title = element_text(hjust = 0.5))
 adwkdayplot
 ```
@@ -175,10 +175,10 @@ adwkdayplot
 adhourplot <-
   ggplot(admissions_tble) +
   geom_bar(aes(hour(admittime)),
-           fill="skyblue",
-           width = 0.6) +
-  labs(x="Hour", y="frequency",
-         title="ICU Admission Frequency by Hour") +
+  fill = "skyblue",
+  width = 0.6) +
+  labs(x = "Hour", y = "frequency",
+  title = "ICU Admission Frequency by Hour") +
   theme(plot.title = element_text(hjust = 0.5))
 adhourplot
 ```
@@ -209,8 +209,8 @@ patients_tble <- semi_join(patients_tble, icustays_tble, by = "subject_id")
 genderageplot <-
   ggplot(patients_tble) +
   geom_density(aes(x = anchor_age)) +
-  labs(x="Age", y="Frequency",
-         title="ICU Admission Age Frequency Table") +
+  labs(x = "Age", y = "Frequency",
+  title = "ICU Admission Age Frequency Table") +
   theme(plot.title = element_text(hjust = 0.5))
 genderageplot
 ```
@@ -219,9 +219,9 @@ From this graph, I can tell that ICU has a high average age and the peak is arou
 ```{r}
 genderageplot <-
   ggplot(patients_tble) +
-  geom_boxplot(aes(x = anchor_age, y=gender)) +
-  labs(x="Age", y="Gender",
-         title="ICU Admission Gender and Age Box Plot") +
+  geom_boxplot(aes(x = anchor_age, y = gender)) +
+  labs(x = "Age", y = "Gender",
+  title = "ICU Admission Gender and Age Box Plot") +
   theme(plot.title = element_text(hjust = 0.5))
 genderageplot
 ```
