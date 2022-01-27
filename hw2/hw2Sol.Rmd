@@ -295,7 +295,9 @@ ggplot(labevents_tble, aes(x = itemid)) +
                               "51301" = "white blood cell count",
                               "50931" = "glucose",
                               "50960" = "magnesium",
-                              "50893" = "calcium"))
+                              "50893" = "calcium")) +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ## Q6. Vitals from charted events
@@ -329,7 +331,8 @@ chartevents_tble <-
            show_col_types = FALSE, col_select = c("subject_id", "itemid"), lazy = TRUE) %>%
   filter(itemid == "220045" | itemid == "220181" | itemid == "220179" 
          | itemid == "223761" | itemid == "220210") %>%
-  semi_join(icustays_tble, by = "subject_id")
+  semi_join(icustays_tble, by = "subject_id") %>%
+  rename(itemid = veid)
 ```
 
 2. Further restrict `chartevents_tble` to the first vital measurement during the ICU stay. 
@@ -339,7 +342,7 @@ chartevents_tble <- distinct(chartevents_tble, subject_id, .keep_all = TRUE)
 3. Summarize these vital measurements by appropriate numerics and graphics. 
  heart rate (220045), mean non-invasive blood pressure (220181), systolic non-invasive blood pressure (220179), body temperature in Fahrenheit (223761), and respiratory rate (220210). 
 ```{r}
-ggplot(chartevents_tble, aes(x = itemid)) +
+ggplot(chartevents_tble, aes(x = veid)) +
   geom_bar(fill = "lightblue", colour = "black") +
     labs(x = "Vital Measurements", ylab = "Count", 
        title = "The Count of The First Vital Measurement Done to A Patient in ICU") +
@@ -348,7 +351,9 @@ ggplot(chartevents_tble, aes(x = itemid)) +
                               "220181" = "mean non-invasive blood pressure",
                               "220179" = "systolic non-invasive blood pressure",
                               "223761" = "body temperature in Fahrenheit",
-                              "220210" = "respiratory rate"))
+                              "220210" = "respiratory rate")) +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(plot.title = element_text(hjust = 0.5))
 ```
 
 ## Q7. Putting things together
@@ -374,7 +379,7 @@ mimic_icu_cohort <-
   inner_join(chartevents_tble, by = "subject_id") %>%
   add_column(thirty_day_mort = if_else(
     difftime(mimic_icu_cohort$deathtime, mimic_icu_cohort$admittime, unit = "day") <= 30,
-    "Died within 30 Days", "Not Died in 30 Days", "Not Died in 30 Days"))
+    "Died within 30 Days of hospital admission", "Not Died in 30 Days of hospital admission", "Not Died in 30 Days of hospital admission"))
 ```
 
 ## Q8. Exploratory data analysis (EDA)
@@ -382,21 +387,153 @@ mimic_icu_cohort <-
 Summarize following information using appropriate numerics or graphs.
 
 - `thirty_day_mort` vs demographic variables (ethnicity, language, insurance, marital_status, gender, age at hospital admission)
-```{r}
 
+    
+```{r}
+mimic_icu_cohort
+```
+
+```{r}
+ggplot(mimic_icu_cohort, aes(x = ethnicity, fill = thirty_day_mort)) +
+  geom_bar(color = "grey6", position = "fill", width = 0.7) +
+  labs(x = "Ethnicity", y = "Percentage of Death", fill = "",
+       title = "The 30 Day Mortality Rate By Ethnicity") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1") +
+  geom_text(aes(label=scales::percent(..count../sum(..count..))),
+            stat='count',position=position_fill(vjust=0.5), size = 3)
+```
+
+```{r}
+ggplot(mimic_icu_cohort, aes(x = language, fill = thirty_day_mort)) +
+  geom_bar(color = "grey6", position = "fill", width = 0.7) +
+  labs(x = "Language", y = "Percentage of Death", fill = "",
+       title = "The 30 Day Mortality Rate By Language") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1") +
+  geom_text(aes(label=scales::percent(..count../sum(..count..))),
+            stat='count',position=position_fill(vjust=0.5)) +
+  scale_x_discrete(labels = c("?" = "Other Languages"))
+```
+
+
+```{r}
+ggplot(mimic_icu_cohort, aes(x = insurance, fill = thirty_day_mort)) +
+  geom_bar(color = "grey6", position = "fill", width = 0.7) +
+  labs(x = "Insurance", y = "Percentage of Death", fill = "",
+       title = "The 30 Day Mortality Rate By Insurance") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1") +
+  geom_text(aes(label=scales::percent(..count../sum(..count..))),
+            stat='count',position=position_fill(vjust=0.5))
+```
+
+```{r}
+ggplot(mimic_icu_cohort, aes(x = marital_status, fill = thirty_day_mort)) +
+  geom_bar(color = "grey6", position = "fill", width = 0.7) +
+  labs(x = "Marital Status", y = "Percentage of Death", fill = "",
+       title = "The 30 Day Mortality Rate By Marital Status") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1") +
+  geom_text(aes(label=scales::percent(..count../sum(..count..))),
+            stat='count',position=position_fill(vjust=0.5))
+```
+
+```{r}
+ggplot(mimic_icu_cohort, aes(x = gender, fill = thirty_day_mort)) +
+  geom_bar(color = "grey6", position = "fill", width = 0.7) +
+  labs(x = "Gender", y = "Percentage of Death", fill = "",
+       title = "The 30 Day Mortality Rate By Gender") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1") +
+  geom_text(aes(label=scales::percent(..count../sum(..count..))),
+              stat='count',position=position_fill(vjust=0.5)) +
+  scale_x_discrete(labels = c("F" = "Female", "M" = "Male"))
+```
+
+```{r}
+ggplot(mimic_icu_cohort, aes(x = anchor_age, fill = thirty_day_mort)) +
+  geom_density(color = "grey6", position = "fill") +
+  labs(x = "Age", y = "Percentage of Death", fill = "",
+       title = "The 30 Day Mortality Rate By Age") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1")
 ```
 
 - `thirty_day_mort` vs first lab measurements
 ```{r}
-
+ggplot(mimic_icu_cohort, aes(x = itemid, fill = thirty_day_mort)) +
+  geom_bar(color = "grey6", position = "fill", width = 0.7) +
+  labs(x = "Lab Measurements", y = "Percentage of Death", fill = "",
+       title = "The 30 Day Mortality Rate By First Lab Measurements") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1") +
+  geom_text(aes(label=scales::percent(..count../sum(..count..))),
+              stat='count',position=position_fill(vjust=0.5)) +
+  scale_x_discrete(labels = c("50912" = "creatinine",
+                              "50971" = "potassium",
+                              "50983" = "sodium",
+                              "50902" = "chloride",
+                              "50882" = "bicarbonate",
+                              "51221" = "hematocrit",
+                              "51301" = "white blood cell count",
+                              "50931" = "glucose",
+                              "50960" = "magnesium",
+                              "50893" = "calcium")) 
 ```
 
 - `thirty_day_mort` vs first vital measurements
 ```{r}
-
+ggplot(mimic_icu_cohort, aes(x = veid, fill = thirty_day_mort)) +
+  geom_bar(color = "grey6", position = "fill", width = 0.7) +
+  labs(x = "Vital Measurements", y = "Percentage of Death", fill = "",
+       title = "The 30 Day Mortality Rate By Vital Measurements") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1") +
+  geom_text(aes(label=scales::percent(..count../sum(..count..))),
+              stat='count',position=position_fill(vjust=0.5)) +
+  scale_x_discrete(labels = c("220045" = "heart rate",
+                              "220181" = "mean non-invasive blood pressure",
+                              "220179" = "systolic non-invasive blood pressure",
+                              "223761" = "body temperature in Fahrenheit",
+                              "220210" = "respiratory rate"))
 ```
 
 - `thirty_day_mort` vs first ICU unit
 ```{r}
-
+ggplot(mimic_icu_cohort, aes(x = first_careunit, fill = thirty_day_mort)) +
+  geom_bar(color = "grey6", position = "fill", width = 0.7) +
+  labs(x = "ICU Unit", y = "Percentage of Death", fill = "",
+       title = "The 30 Day Mortality Rate By First ICU Unit") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1") +
+  geom_text(aes(label=scales::percent(..count../sum(..count..))),
+              stat='count',position=position_fill(vjust=0.5), size = 3)
 ```
