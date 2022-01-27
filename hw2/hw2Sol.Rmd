@@ -44,16 +44,16 @@ Which function is fastest? Is there difference in the (default) parsed data type
 
 ```{r}
 admissions <- "/mnt/mimiciv/1.0/core/admissions.csv.gz"
+```
+```{r}
 #Base R
 system.time(read.csv(admissions))
 ```
 ```{r}
-admissions <- "/mnt/mimiciv/1.0/core/admissions.csv.gz"
 #Tidyverse
 system.time(read.csv(admissions))
 ```
 ```{r}
-admissions <- "/mnt/mimiciv/1.0/core/admissions.csv.gz"
 #fread
 system.time(fread(admissions))
 ```
@@ -281,7 +281,21 @@ labevents_tble <- distinct(labevents_tble, subject_id, .keep_all = TRUE)
 
 4. Summarize the lab measurements by appropriate numerics and graphics.
 ```{r}
-
+ggplot(labevents_tble, aes(x = itemid)) +
+  geom_bar(fill = "lightblue", colour = "black") +
+  labs(x = "Lab Measurements", ylab = "Count", 
+       title = "The Count of The First Lab Measurement Done to a Patient in ICU") +
+  geom_text(aes(label = ..count..), stat = "count", vjust = 1.5, color = "white") +
+  scale_x_discrete(labels = c("50912" = "creatinine",
+                              "50971" = "potassium",
+                              "50983" = "sodium",
+                              "50902" = "chloride",
+                              "50882" = "bicarbonate",
+                              "51221" = "hematocrit",
+                              "51301" = "white blood cell count",
+                              "50931" = "glucose",
+                              "50960" = "magnesium",
+                              "50893" = "calcium"))
 ```
 
 ## Q6. Vitals from charted events
@@ -323,8 +337,18 @@ chartevents_tble <-
 chartevents_tble <- distinct(chartevents_tble, subject_id, .keep_all = TRUE)
 ```
 3. Summarize these vital measurements by appropriate numerics and graphics. 
+ heart rate (220045), mean non-invasive blood pressure (220181), systolic non-invasive blood pressure (220179), body temperature in Fahrenheit (223761), and respiratory rate (220210). 
 ```{r}
-
+ggplot(chartevents_tble, aes(x = itemid)) +
+  geom_bar(fill = "lightblue", colour = "black") +
+    labs(x = "Vital Measurements", ylab = "Count", 
+       title = "The Count of The First Vital Measurement Done to A Patient in ICU") +
+  geom_text(aes(label = ..count..), stat = "count", vjust = 1.5, color = "white") +
+  scale_x_discrete(labels = c("220045" = "heart rate",
+                              "220181" = "mean non-invasive blood pressure",
+                              "220179" = "systolic non-invasive blood pressure",
+                              "223761" = "body temperature in Fahrenheit",
+                              "220210" = "respiratory rate"))
 ```
 
 ## Q7. Putting things together
