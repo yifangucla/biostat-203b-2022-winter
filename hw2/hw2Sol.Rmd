@@ -372,8 +372,9 @@ mimic_icu_cohort <-
   inner_join(patients_tble, by = "subject_id") %>%
   inner_join(labevents_tble, by = "subject_id") %>%
   inner_join(chartevents_tble, by = "subject_id") %>%
-  add_column(thirty_day_mort = if_else(difftime(deathtime, admittime, unit = "day") <= 30,
-                                       "Died within 30 Days", "Not Died in 30 Days", "Not Died in 30 Days"))
+  add_column(thirty_day_mort = if_else(
+    difftime(mimic_icu_cohort$deathtime, mimic_icu_cohort$admittime, unit = "day") <= 30,
+    "Died within 30 Days", "Not Died in 30 Days", "Not Died in 30 Days"))
 ```
 
 ## Q8. Exploratory data analysis (EDA)
