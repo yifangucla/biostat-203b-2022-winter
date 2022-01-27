@@ -80,7 +80,6 @@ system(
 ```{r}
 icustays <- read_csv("/mnt/mimiciv/1.0/icu/icustays.csv.gz", show_col_types = FALSE)
 icustays_tble <- tibble(icustays)
-is_tibble(icustays_tble)
 ```
 
 2. How many unique `subject_id`? Can a `subject_id` have multiple ICU stays? 
@@ -115,7 +114,6 @@ system(
 ```{r}
 admissions_df <- read_csv(admissions, show_col_types = FALSE)
 admissions_tble <- tibble(admissions_df)
-is_tibble(admissions_tble)
 ```
 2. Let's only keep the admissions that have a match in `icustays_tble` according to `subject_id` and `hadmi_id`.
 ```{r}
@@ -134,7 +132,7 @@ adyearplot <-
   ggplot(admissions_tble) +
   geom_density(aes(year(admittime))) +
   labs(x = "year", y = "frequency",
-  title = "ICU Annually Admission Frequency Table") +
+       title = "ICU Annually Admission Frequency Table") +
   theme(plot.title = element_text(hjust = 0.5))
 adyearplot
 ```
@@ -145,7 +143,7 @@ admonthplot <-
   fill = "skyblue",
   width = 0.6) +
   labs(x = "month", y = "frequency",
-  title = "ICU Admission Frequency by Month") +
+       title = "ICU Admission Frequency by Month") +
   theme(plot.title = element_text(hjust = 0.5))
 admonthplot
 ```
@@ -156,7 +154,7 @@ admdayplot <-
   fill = "skyblue",
   width = 0.6) +
   labs(x = "Day", y = "frequency",
-  title = "ICU Admission Frequency by Day") +
+       title = "ICU Admission Frequency by Day") +
   theme(plot.title = element_text(hjust = 0.5))
 admdayplot
 ```
@@ -167,7 +165,7 @@ adwkdayplot <-
   fill = "skyblue",
   width = 0.6) +
   labs(x = "Week Day", y = "frequency",
-  title = "ICU Admission Frequency by Week Day") +
+       title = "ICU Admission Frequency by Week Day") +
   theme(plot.title = element_text(hjust = 0.5))
 adwkdayplot
 ```
@@ -178,7 +176,7 @@ adhourplot <-
   fill = "skyblue",
   width = 0.6) +
   labs(x = "Hour", y = "frequency",
-  title = "ICU Admission Frequency by Hour") +
+       title = "ICU Admission Frequency by Hour") +
   theme(plot.title = element_text(hjust = 0.5))
 adhourplot
 ```
@@ -210,7 +208,7 @@ genderageplot <-
   ggplot(patients_tble) +
   geom_density(aes(x = anchor_age)) +
   labs(x = "Age", y = "Frequency",
-  title = "ICU Admission Age Frequency Table") +
+       title = "ICU Admission Age Frequency Table") +
   theme(plot.title = element_text(hjust = 0.5))
 genderageplot
 ```
@@ -221,7 +219,7 @@ genderageplot <-
   ggplot(patients_tble) +
   geom_boxplot(aes(x = anchor_age, y = gender)) +
   labs(x = "Age", y = "Gender",
-  title = "ICU Admission Gender and Age Box Plot") +
+       title = "ICU Admission Gender and Age Box Plot") +
   theme(plot.title = element_text(hjust = 0.5))
 genderageplot
 ```
@@ -253,13 +251,38 @@ system(
 ```
 
 1. Find how many rows are in `labevents.csv.gz`.
+```{r}
+read_csv("/mnt/mimiciv/1.0/hosp/labevents.csv.gz",
+           show_col_types = FALSE, col_select = c("labevent_id"), lazy = TRUE) %>%
+  nrow()
+```
+There are 122103667 rows in `labevents.csv.gz`.
 
 2. We are interested in the lab measurements of creatinine (50912), potassium (50971), sodium (50983), chloride (50902), bicarbonate (50882), hematocrit (51221), white blood cell count (51301), glucose (50931), magnesium (50960), and calcium (50893). Retrieve a subset of `labevents.csv.gz` only containing these items for the patients in `icustays_tble` as a tibble `labevents_tble`. 
 
     Hint: `labevents.csv.gz` is a data file too big to be read in by the `read_csv` function in its default setting. Utilize the `col_select` and `lazy` options in the `read_csv` function to reduce the memory burden.
+```{r}
+labevents_tble <- 
+  read_csv("/mnt/mimiciv/1.0/hosp/labevents.csv.gz",
+           show_col_types = FALSE, col_select = c("subject_id", "itemid"), lazy = TRUE) %>%
+  filter(itemid == "50912" | itemid == "50917" | itemid == "50983" | itemid == "50902" 
+         | itemid == "50882" | itemid == "51221" | itemid == "51301" 
+         | itemid == "50931" | itemid == "50960" | itemid == "50893") %>%
+  semi_join(icustays_tble, by = "subject_id")
+```
+```{r}
+labevents_tble
+```
 
 3. Further restrict `labevents_tble` to the first lab measurement during the ICU stay. 
-4. Summarize the lab measurements by appropriate numerics and graphics. 
+```{r}
+labevents_tble <- distinct(labevents_tble, subject_id, .keep_all = TRUE)
+```
+
+4. Summarize the lab measurements by appropriate numerics and graphics.
+```{r}
+
+```
 
 ## Q6. Vitals from charted events
 
@@ -286,9 +309,23 @@ system(
 
 1. We are interested in the vitals for ICU patients: heart rate (220045), mean non-invasive blood pressure (220181), systolic non-invasive blood pressure (220179), body temperature in Fahrenheit (223761), and respiratory rate (220210). Retrieve a subset of `chartevents.csv.gz` only containing these items for the patients in `icustays_tble` as a tibble `chartevents_tble`.
 
-2. Further restrict `chartevents_tble` to the first vital measurement during the ICU stay. 
+```{r}
+chartevents_tble <- 
+  read_csv("/mnt/mimiciv/1.0/icu/chartevents.csv.gz",
+           show_col_types = FALSE, col_select = c("subject_id", "itemid"), lazy = TRUE) %>%
+  filter(itemid == "220045" | itemid == "220181" | itemid == "220179" 
+         | itemid == "223761" | itemid == "220210") %>%
+  semi_join(icustays_tble, by = "subject_id")
+```
 
+2. Further restrict `chartevents_tble` to the first vital measurement during the ICU stay. 
+```{r}
+chartevents_tble <- distinct(chartevents_tble, subject_id, .keep_all = TRUE)
+```
 3. Summarize these vital measurements by appropriate numerics and graphics. 
+```{r}
+
+```
 
 ## Q7. Putting things together
 
@@ -305,15 +342,36 @@ and columns contain at least following variables
 - first vital measurements during ICU stay
 - an indicator variable `thirty_day_mort` whether the patient died within 30 days of hospital admission (30 day mortality)
 
+```{r}
+mimic_icu_cohort <-
+  inner_join(icustays_tble, admissions_tble, by = "subject_id") %>%
+  inner_join(patients_tble, by = "subject_id") %>%
+  inner_join(labevents_tble, by = "subject_id") %>%
+  inner_join(chartevents_tble, by = "subject_id") %>%
+  add_column(thirty_day_mort = if_else(difftime(deathtime, admittime, unit = "day") <= 30,
+                                       "Died within 30 Days", "Not Died in 30 Days", "Not Died in 30 Days"))
+```
+
 ## Q8. Exploratory data analysis (EDA)
 
 Summarize following information using appropriate numerics or graphs.
 
 - `thirty_day_mort` vs demographic variables (ethnicity, language, insurance, marital_status, gender, age at hospital admission)
+```{r}
+
+```
 
 - `thirty_day_mort` vs first lab measurements
+```{r}
+
+```
 
 - `thirty_day_mort` vs first vital measurements
+```{r}
+
+```
 
 - `thirty_day_mort` vs first ICU unit
+```{r}
 
+```
