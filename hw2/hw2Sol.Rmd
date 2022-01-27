@@ -332,7 +332,7 @@ chartevents_tble <-
   filter(itemid == "220045" | itemid == "220181" | itemid == "220179" 
          | itemid == "223761" | itemid == "220210") %>%
   semi_join(icustays_tble, by = "subject_id") %>%
-  rename(itemid = veid)
+  rename(veid = itemid)
 ```
 
 2. Further restrict `chartevents_tble` to the first vital measurement during the ICU stay. 
@@ -387,11 +387,6 @@ mimic_icu_cohort <-
 Summarize following information using appropriate numerics or graphs.
 
 - `thirty_day_mort` vs demographic variables (ethnicity, language, insurance, marital_status, gender, age at hospital admission)
-
-    
-```{r}
-mimic_icu_cohort
-```
 
 ```{r}
 ggplot(mimic_icu_cohort, aes(x = ethnicity, fill = thirty_day_mort)) +
