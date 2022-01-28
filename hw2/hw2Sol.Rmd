@@ -252,26 +252,23 @@ system(
 
 1. Find how many rows are in `labevents.csv.gz`.
 ```{r}
-read_csv("/mnt/mimiciv/1.0/hosp/labevents.csv.gz",
-           show_col_types = FALSE, col_select = c("labevent_id"), lazy = TRUE) %>%
+read_csv("/mnt/mimiciv/1.0/hosp/labevents_filtered_itemid.csv.gz",
+           show_col_types = FALSE, lazy = TRUE) %>%
   nrow()
 ```
-There are 122103667 rows in `labevents.csv.gz`.
+There are 122103667 rows in `labevents.csv.gz`, and there are 30198826 rows in 'labevents_filtered_itemid.csv.gz'.
 
 2. We are interested in the lab measurements of creatinine (50912), potassium (50971), sodium (50983), chloride (50902), bicarbonate (50882), hematocrit (51221), white blood cell count (51301), glucose (50931), magnesium (50960), and calcium (50893). Retrieve a subset of `labevents.csv.gz` only containing these items for the patients in `icustays_tble` as a tibble `labevents_tble`. 
 
     Hint: `labevents.csv.gz` is a data file too big to be read in by the `read_csv` function in its default setting. Utilize the `col_select` and `lazy` options in the `read_csv` function to reduce the memory burden.
 ```{r}
 labevents_tble <- 
-  read_csv("/mnt/mimiciv/1.0/hosp/labevents.csv.gz",
+  read_csv("/mnt/mimiciv/1.0/hosp/labevents_filtered_itemid.csv.gz",
            show_col_types = FALSE, col_select = c("subject_id", "itemid"), lazy = TRUE) %>%
-  filter(itemid == "50912" | itemid == "50917" | itemid == "50983" | itemid == "50902" 
+  filter(itemid == "50912" | itemid == "50971" | itemid == "50983" | itemid == "50902" 
          | itemid == "50882" | itemid == "51221" | itemid == "51301" 
          | itemid == "50931" | itemid == "50960" | itemid == "50893") %>%
   semi_join(icustays_tble, by = "subject_id")
-```
-```{r}
-labevents_tble
 ```
 
 3. Further restrict `labevents_tble` to the first lab measurement during the ICU stay. 
@@ -281,11 +278,11 @@ labevents_tble <- distinct(labevents_tble, subject_id, .keep_all = TRUE)
 
 4. Summarize the lab measurements by appropriate numerics and graphics.
 ```{r}
-ggplot(labevents_tble, aes(x = itemid)) +
+ggplot(labevents_tble, aes(x = factor(itemid))) +
   geom_bar(fill = "lightblue", colour = "black") +
   labs(x = "Lab Measurements", ylab = "Count", 
        title = "The Count of The First Lab Measurement Done to a Patient in ICU") +
-  geom_text(aes(label = ..count..), stat = "count", vjust = 1.5, color = "white") +
+  geom_text(aes(label = ..count..), stat = "count", vjust = -0.2, color = "black") +
   scale_x_discrete(labels = c("50912" = "creatinine",
                               "50971" = "potassium",
                               "50983" = "sodium",
@@ -297,7 +294,9 @@ ggplot(labevents_tble, aes(x = itemid)) +
                               "50960" = "magnesium",
                               "50893" = "calcium")) +
   theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5)) +
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', vjust = 1.3)
 ```
 
 ## Q6. Vitals from charted events
@@ -327,11 +326,11 @@ system(
 
 ```{r}
 chartevents_tble <- 
-  read_csv("/mnt/mimiciv/1.0/icu/chartevents.csv.gz",
+  read_csv("/mnt/mimiciv/1.0/icu/chartevents_filtered_itemid.csv.gz",
            show_col_types = FALSE, col_select = c("subject_id", "itemid"), lazy = TRUE) %>%
+  semi_join(icustays_tble, by = "subject_id") %>%
   filter(itemid == "220045" | itemid == "220181" | itemid == "220179" 
          | itemid == "223761" | itemid == "220210") %>%
-  semi_join(icustays_tble, by = "subject_id") %>%
   rename(veid = itemid)
 ```
 
@@ -342,18 +341,20 @@ chartevents_tble <- distinct(chartevents_tble, subject_id, .keep_all = TRUE)
 3. Summarize these vital measurements by appropriate numerics and graphics. 
  heart rate (220045), mean non-invasive blood pressure (220181), systolic non-invasive blood pressure (220179), body temperature in Fahrenheit (223761), and respiratory rate (220210). 
 ```{r}
-ggplot(chartevents_tble, aes(x = veid)) +
+ggplot(chartevents_tble, aes(x = factor(veid))) +
   geom_bar(fill = "lightblue", colour = "black") +
     labs(x = "Vital Measurements", ylab = "Count", 
-       title = "The Count of The First Vital Measurement Done to A Patient in ICU") +
-  geom_text(aes(label = ..count..), stat = "count", vjust = 1.5, color = "white") +
+       title = "The Count of The First Vital Measurement Done to a Patient in ICU") +
+  geom_text(aes(label = ..count..), stat = "count", vjust = -0.2, color = "black") +
   scale_x_discrete(labels = c("220045" = "heart rate",
                               "220181" = "mean non-invasive blood pressure",
                               "220179" = "systolic non-invasive blood pressure",
                               "223761" = "body temperature in Fahrenheit",
                               "220210" = "respiratory rate")) +
   theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
-  theme(plot.title = element_text(hjust = 0.5))
+  theme(plot.title = element_text(hjust = 0.5)) +
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+              stat = 'count', vjust = 1.3)
 ```
 
 ## Q7. Putting things together
@@ -398,8 +399,8 @@ ggplot(mimic_icu_cohort, aes(x = ethnicity, fill = thirty_day_mort)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_y_continuous(labels = scales::percent) +
   scale_fill_brewer(palette = "Pastel1") +
-  geom_text(aes(label=scales::percent(..count../sum(..count..))),
-            stat='count',position=position_fill(vjust=0.5), size = 3)
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', position = position_fill(vjust=0.5), size = 3)
 ```
 
 ```{r}
@@ -412,8 +413,8 @@ ggplot(mimic_icu_cohort, aes(x = language, fill = thirty_day_mort)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_y_continuous(labels = scales::percent) +
   scale_fill_brewer(palette = "Pastel1") +
-  geom_text(aes(label=scales::percent(..count../sum(..count..))),
-            stat='count',position=position_fill(vjust=0.5)) +
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', position = position_fill(vjust = 0.5)) +
   scale_x_discrete(labels = c("?" = "Other Languages"))
 ```
 
@@ -428,8 +429,8 @@ ggplot(mimic_icu_cohort, aes(x = insurance, fill = thirty_day_mort)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_y_continuous(labels = scales::percent) +
   scale_fill_brewer(palette = "Pastel1") +
-  geom_text(aes(label=scales::percent(..count../sum(..count..))),
-            stat='count',position=position_fill(vjust=0.5))
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', position = position_fill(vjust = 0.5))
 ```
 
 ```{r}
@@ -442,8 +443,8 @@ ggplot(mimic_icu_cohort, aes(x = marital_status, fill = thirty_day_mort)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_y_continuous(labels = scales::percent) +
   scale_fill_brewer(palette = "Pastel1") +
-  geom_text(aes(label=scales::percent(..count../sum(..count..))),
-            stat='count',position=position_fill(vjust=0.5))
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', position = position_fill(vjust = 0.5))
 ```
 
 ```{r}
@@ -456,8 +457,8 @@ ggplot(mimic_icu_cohort, aes(x = gender, fill = thirty_day_mort)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_y_continuous(labels = scales::percent) +
   scale_fill_brewer(palette = "Pastel1") +
-  geom_text(aes(label=scales::percent(..count../sum(..count..))),
-              stat='count',position=position_fill(vjust=0.5)) +
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', position = position_fill(vjust = 0.5)) +
   scale_x_discrete(labels = c("F" = "Female", "M" = "Male"))
 ```
 
@@ -475,7 +476,7 @@ ggplot(mimic_icu_cohort, aes(x = anchor_age, fill = thirty_day_mort)) +
 
 - `thirty_day_mort` vs first lab measurements
 ```{r}
-ggplot(mimic_icu_cohort, aes(x = itemid, fill = thirty_day_mort)) +
+ggplot(mimic_icu_cohort, aes(x = factor(itemid), fill = thirty_day_mort)) +
   geom_bar(color = "grey6", position = "fill", width = 0.7) +
   labs(x = "Lab Measurements", y = "Percentage of Death", fill = "",
        title = "The 30 Day Mortality Rate By First Lab Measurements") +
@@ -484,8 +485,8 @@ ggplot(mimic_icu_cohort, aes(x = itemid, fill = thirty_day_mort)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_y_continuous(labels = scales::percent) +
   scale_fill_brewer(palette = "Pastel1") +
-  geom_text(aes(label=scales::percent(..count../sum(..count..))),
-              stat='count',position=position_fill(vjust=0.5)) +
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', position = position_fill(vjust = 0.5), size = 3) +
   scale_x_discrete(labels = c("50912" = "creatinine",
                               "50971" = "potassium",
                               "50983" = "sodium",
@@ -500,7 +501,7 @@ ggplot(mimic_icu_cohort, aes(x = itemid, fill = thirty_day_mort)) +
 
 - `thirty_day_mort` vs first vital measurements
 ```{r}
-ggplot(mimic_icu_cohort, aes(x = veid, fill = thirty_day_mort)) +
+ggplot(mimic_icu_cohort, aes(x = factor(veid), fill = thirty_day_mort)) +
   geom_bar(color = "grey6", position = "fill", width = 0.7) +
   labs(x = "Vital Measurements", y = "Percentage of Death", fill = "",
        title = "The 30 Day Mortality Rate By Vital Measurements") +
@@ -509,8 +510,8 @@ ggplot(mimic_icu_cohort, aes(x = veid, fill = thirty_day_mort)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_y_continuous(labels = scales::percent) +
   scale_fill_brewer(palette = "Pastel1") +
-  geom_text(aes(label=scales::percent(..count../sum(..count..))),
-              stat='count',position=position_fill(vjust=0.5)) +
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', position = position_fill(vjust = 0.5)) +
   scale_x_discrete(labels = c("220045" = "heart rate",
                               "220181" = "mean non-invasive blood pressure",
                               "220179" = "systolic non-invasive blood pressure",
@@ -529,6 +530,6 @@ ggplot(mimic_icu_cohort, aes(x = first_careunit, fill = thirty_day_mort)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_y_continuous(labels = scales::percent) +
   scale_fill_brewer(palette = "Pastel1") +
-  geom_text(aes(label=scales::percent(..count../sum(..count..))),
-              stat='count',position=position_fill(vjust=0.5), size = 3)
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', position = position_fill(vjust = 0.5), size = 3, color = "grey1")
 ```
