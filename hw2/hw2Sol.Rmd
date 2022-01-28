@@ -180,6 +180,7 @@ adhourplot <-
   theme(plot.title = element_text(hjust = 0.5))
 adhourplot
 ```
+
 There is an unusual burst in ICU admission at 0 in the night, and I do not know why.
 
 ## Q4. `patients` data
@@ -212,6 +213,7 @@ genderageplot <-
   theme(plot.title = element_text(hjust = 0.5))
 genderageplot
 ```
+
 From this graph, I can tell that ICU has a high average age and the peak is around 67 years old. The chance of getting into ICU between 20 to 40 is low and are about the same. After 40 years old, it becomes more and more easier to get into ICU when the age increases.
 
 ```{r}
@@ -223,6 +225,7 @@ genderageplot <-
   theme(plot.title = element_text(hjust = 0.5))
 genderageplot
 ```
+
 From this graph, I can tell that female has a higher mean age of getting into ICU than male, and male gets into ICU earlier than female in their life on average. This is probably a side proof that female has a higher average lifetime than man do （because if you get into ICU later, it means that you are healthier.)
 
 ## Q5. Lab results
@@ -377,8 +380,9 @@ mimic_icu_cohort <-
   inner_join(icustays_tble, admissions_tble, by = "subject_id") %>%
   inner_join(patients_tble, by = "subject_id") %>%
   inner_join(labevents_tble, by = "subject_id") %>%
-  inner_join(chartevents_tble, by = "subject_id") %>%
-  add_column(thirty_day_mort = if_else(
+  inner_join(chartevents_tble, by = "subject_id")
+mimic_icu_cohort <-
+  add_column(mimic_icu_cohort, thirty_day_mort = if_else(
     difftime(mimic_icu_cohort$deathtime, mimic_icu_cohort$admittime, unit = "day") <= 30,
     "Died within 30 Days of hospital admission", "Not Died in 30 Days of hospital admission", "Not Died in 30 Days of hospital admission"))
 ```
