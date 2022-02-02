@@ -1,12 +1,12 @@
 ---
-title: "extra practice"
+title: "How to Replace the Second Match"
 output: html_document
+
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, message=F}
+library(tidyverse)
 ```
-
 During the lecture, we learned how to replace the first match:
 For example, we replace the first match of vowel.
     ```{r}
@@ -18,7 +18,7 @@ We also learned how to replace all matches:
     str_replace_all(x, "[aeiou]", "-")
     ```
 
-There is a question of how can we only replace the second match of vowel.
+There is a question of how can we only replace the second match.
 And I find out the answer:
 ```{r}
 x <- c("apple", "pear", "banana")
