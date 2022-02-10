@@ -196,10 +196,11 @@ pre code {
 <ol style="list-style-type: decimal">
 <li><p>The <code>/mnt/mimiciv/1.0</code> folder on teaching server contains data sets from MIMIC-IV. Refer to the documentation <a href="https://mimic.mit.edu/docs/iv/" class="uri">https://mimic.mit.edu/docs/iv/</a> for details of data files.</p>
 <pre class="bash"><code>ls -l /mnt/mimiciv/1.0</code></pre>
-<pre><code>## total 24
+<pre><code>## total 28
+## -rw-r--r--  1 root root 2356 Feb 10 22:09 biostat-203b-2022winter-3fdc2392ac39.json
 ## drwxr-xr-x. 2 root root 4096 Jan  4 21:48 core
-## drwxr-xr-x. 2 root root 4096 Jan  4 21:51 hosp
-## drwxr-xr-x. 2 root root 4096 Jan  4 21:52 icu
+## drwxr-xr-x. 2 root root 4096 Jan 28 02:58 hosp
+## drwxr-xr-x. 2 root root 4096 Jan 28 03:49 icu
 ## -rw-r--r--. 1 root root  797 Jan  4 21:48 index.html
 ## -rw-r--r--. 1 root root 2518 Jan  4 21:54 LICENSE.txt
 ## -rw-r--r--. 1 root root 2459 Jan  4 21:48 SHA256SUMS.txt</code></pre>
@@ -214,34 +215,36 @@ ls -l /mnt/mimiciv/1.0/icu</code></pre>
 ## -rw-r--r--. 1 root root      606 Jan  4 21:48 index.html
 ## -rw-r--r--. 1 root root  2955582 Jan  4 21:48 patients.csv.gz
 ## -rw-r--r--. 1 root root 53014503 Jan  4 21:48 transfers.csv.gz
-## total 4454012
-## -rw-r--r--. 1 root root     430049 Jan  4 21:51 d_hcpcs.csv.gz
-## -rw-r--r--. 1 root root   29531152 Jan  4 21:48 diagnoses_icd.csv.gz
-## -rw-r--r--. 1 root root     863239 Jan  4 21:48 d_icd_diagnoses.csv.gz
-## -rw-r--r--. 1 root root     579998 Jan  4 21:48 d_icd_procedures.csv.gz
-## -rw-r--r--. 1 root root      14898 Jan  4 21:48 d_labitems.csv.gz
-## -rw-r--r--. 1 root root   11684062 Jan  4 21:51 drgcodes.csv.gz
-## -rw-r--r--. 1 root root  515763427 Jan  4 21:51 emar.csv.gz
-## -rw-r--r--. 1 root root  476252563 Jan  4 21:48 emar_detail.csv.gz
-## -rw-r--r--. 1 root root    2098831 Jan  4 21:51 hcpcsevents.csv.gz
-## -rw-r--r--. 1 root root       2325 Jan  4 21:48 index.html
-## -rw-r--r--. 1 root root 2091865786 Jan  4 21:50 labevents.csv.gz
-## -rw-r--r--. 1 root root   99133381 Jan  4 21:48 microbiologyevents.csv.gz
-## -rw-r--r--. 1 root root  422874088 Jan  4 21:48 pharmacy.csv.gz
-## -rw-r--r--. 1 root root  501381155 Jan  4 21:51 poe.csv.gz
-## -rw-r--r--. 1 root root   24020923 Jan  4 21:48 poe_detail.csv.gz
-## -rw-r--r--. 1 root root  367041717 Jan  4 21:49 prescriptions.csv.gz
-## -rw-r--r--. 1 root root    7750325 Jan  4 21:48 procedures_icd.csv.gz
-## -rw-r--r--. 1 root root    9565293 Jan  4 21:48 services.csv.gz
-## total 2741332
-## -rw-r--r--. 1 root root 2350783547 Jan  4 21:54 chartevents.csv.gz
-## -rw-r--r--. 1 root root   43296273 Jan  4 21:52 datetimeevents.csv.gz
-## -rw-r--r--. 1 root root      55917 Jan  4 21:52 d_items.csv.gz
-## -rw-r--r--. 1 root root    2848628 Jan  4 21:52 icustays.csv.gz
-## -rw-r--r--. 1 root root       1103 Jan  4 21:52 index.html
-## -rw-r--r--. 1 root root  352443512 Jan  4 21:52 inputevents.csv.gz
-## -rw-r--r--. 1 root root   37095672 Jan  4 21:52 outputevents.csv.gz
-## -rw-r--r--. 1 root root   20567368 Jan  4 21:52 procedureevents.csv.gz</code></pre></li>
+## total 4621616
+## -rw-r--r--. 1 root    root        430049 Jan  4 21:51 d_hcpcs.csv.gz
+## -rw-r--r--. 1 root    root      29531152 Jan  4 21:48 diagnoses_icd.csv.gz
+## -rw-r--r--. 1 root    root        863239 Jan  4 21:48 d_icd_diagnoses.csv.gz
+## -rw-r--r--. 1 root    root        579998 Jan  4 21:48 d_icd_procedures.csv.gz
+## -rw-r--r--. 1 root    root         14898 Jan  4 21:48 d_labitems.csv.gz
+## -rw-r--r--. 1 root    root      11684062 Jan  4 21:51 drgcodes.csv.gz
+## -rw-r--r--. 1 root    root     515763427 Jan  4 21:51 emar.csv.gz
+## -rw-r--r--. 1 root    root     476252563 Jan  4 21:48 emar_detail.csv.gz
+## -rw-r--r--. 1 root    root       2098831 Jan  4 21:51 hcpcsevents.csv.gz
+## -rw-r--r--. 1 root    root          2325 Jan  4 21:48 index.html
+## -rw-r--r--. 1 root    root    2091865786 Jan  4 21:50 labevents.csv.gz
+## -rw-r--r--  1 huazhou huazhou  171624288 Jan 28 02:57 labevents_filtered_itemid.csv.gz
+## -rw-r--r--. 1 root    root      99133381 Jan  4 21:48 microbiologyevents.csv.gz
+## -rw-r--r--. 1 root    root     422874088 Jan  4 21:48 pharmacy.csv.gz
+## -rw-r--r--. 1 root    root     501381155 Jan  4 21:51 poe.csv.gz
+## -rw-r--r--. 1 root    root      24020923 Jan  4 21:48 poe_detail.csv.gz
+## -rw-r--r--. 1 root    root     367041717 Jan  4 21:49 prescriptions.csv.gz
+## -rw-r--r--. 1 root    root       7750325 Jan  4 21:48 procedures_icd.csv.gz
+## -rw-r--r--. 1 root    root       9565293 Jan  4 21:48 services.csv.gz
+## total 2849020
+## -rw-r--r--. 1 root    root    2350783547 Jan  4 21:54 chartevents.csv.gz
+## -rw-r--r--  1 huazhou huazhou  110272408 Jan 28 03:49 chartevents_filtered_itemid.csv.gz
+## -rw-r--r--. 1 root    root      43296273 Jan  4 21:52 datetimeevents.csv.gz
+## -rw-r--r--. 1 root    root         55917 Jan  4 21:52 d_items.csv.gz
+## -rw-r--r--. 1 root    root       2848628 Jan  4 21:52 icustays.csv.gz
+## -rw-r--r--. 1 root    root          1103 Jan  4 21:52 index.html
+## -rw-r--r--. 1 root    root     352443512 Jan  4 21:52 inputevents.csv.gz
+## -rw-r--r--. 1 root    root      37095672 Jan  4 21:52 outputevents.csv.gz
+## -rw-r--r--. 1 root    root      20567368 Jan  4 21:52 procedureevents.csv.gz</code></pre></li>
 </ol>
 <p><strong>These CSV. GZ is a CSV file compressed with gzip utility, which means these are all compressed files.</strong></p>
 <ol start="3" style="list-style-type: decimal">
@@ -278,17 +281,20 @@ for datafile in /mnt/mimiciv/1.0/core/*.gz
 ## 11989120,21965160,2147-01-14 09:00:00,2147-01-17 14:25:00,,ELECTIVE,,HOME,Other,ENGLISH,,UNKNOWN,,,0
 ## 17817079,24709883,2165-12-27 17:33:00,2165-12-31 21:18:00,,ELECTIVE,,HOME,Other,ENGLISH,,OTHER,,,0
 ## 15078341,23272159,2122-08-28 08:48:00,2122-08-30 12:32:00,,ELECTIVE,,HOME,Other,ENGLISH,,BLACK/AFRICAN AMERICAN,,,0</code></pre>
-<pre class="bash"><code>   zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk &#39;END { print NR }&#39; </code></pre>
+<pre class="bash"><code>   zcat /mnt/mimiciv/1.0/core/admissions.csv.gz |
+   awk &#39;END { print NR }&#39; </code></pre>
 <pre><code>## 523741</code></pre>
 <p>There are 523741 rows in this data file, including the title row.</p>
-<pre class="bash"><code>zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{if(NR&gt;1){print $1} }&#39; | sort | uniq | wc -l</code></pre>
+<pre class="bash"><code>zcat /mnt/mimiciv/1.0/core/admissions.csv.gz |
+awk -F, &#39;{if(NR&gt;1){print $1} }&#39; | sort | uniq | wc -l</code></pre>
 <pre><code>## 256878</code></pre>
 <p>There are 256878 unique patients in this data file.</p></li>
 <li><p>What are the possible values taken by each of the variable <code>admission_type</code>, <code>admission_location</code>, <code>insurance</code>, and <code>ethnicity</code>? Also report the count for each unique value of these variables. (Hint: combine Linux commands <code>zcat</code>, <code>head</code>/<code>tail</code>, <code>awk</code>, <code>uniq -c</code>, <code>wc</code>, and so on.)</p></li>
 </ol>
 <p><strong>Admission_type</strong></p>
 <pre><code>```bash
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{if(NR&gt;1){print $6} }&#39; | sort | uniq -c
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz |
+awk -F, &#39;{if(NR&gt;1){print $6} }&#39; | sort | uniq -c
 ```
 
 ```
@@ -304,7 +310,8 @@ zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{if(NR&gt;1){print $
 ```</code></pre>
 <p><strong>Admission_location</strong></p>
 <pre><code>```bash
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{if(NR&gt;1){print $7} }&#39; | sort | uniq -c
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz |
+awk -F, &#39;{if(NR&gt;1){print $7} }&#39; | sort | uniq -c
 ```
 
 ```
@@ -323,7 +330,8 @@ zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{if(NR&gt;1){print $
 ```</code></pre>
 <p><strong>Insurance</strong></p>
 <pre><code>```bash
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{if(NR&gt;1){print $9} }&#39; | sort | uniq -c
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz |
+awk -F, &#39;{if(NR&gt;1){print $9} }&#39; | sort | uniq -c
 ```
 
 ```
@@ -333,7 +341,8 @@ zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{if(NR&gt;1){print $
 ```</code></pre>
 <p><strong>Ethnicity</strong></p>
 <pre><code>```bash
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{if(NR&gt;1){print $12} }&#39; | sort | uniq -c
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz |
+awk -F, &#39;{if(NR&gt;1){print $12} }&#39; | sort | uniq -c
 ```
 
 ```
@@ -384,21 +393,182 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <div id="q5.-more-fun-with-linux" class="section level3">
 <h3>Q5. More fun with Linux</h3>
 <p>Try following commands in Bash and interpret the results: <code>cal</code>, <code>cal 2021</code>, <code>cal 9 1752</code> (anything unusual?), <code>date</code>, <code>hostname</code>, <code>arch</code>, <code>uname -a</code>, <code>uptime</code>, <code>who am i</code>, <code>who</code>, <code>w</code>, <code>id</code>, <code>last | head</code>, <code>echo {con,pre}{sent,fer}{s,ed}</code>, <code>time sleep 5</code>, <code>history | tail</code>.</p>
+<pre><code>```bash
+cal
+```
+
+```
+##     February 2022   
+## Su Mo Tu We Th Fr Sa
+##        1  2  3  4  5
+##  6  7  8  9 10 11 12
+## 13 14 15 16 17 18 19
+## 20 21 22 23 24 25 26
+## 27 28
+```</code></pre>
 <p><code>cal</code> shows the calender of this month and today.</p>
+<pre><code>```bash
+cal 2021
+```
+
+```
+##                                2021                               
+## 
+##        January               February                 March       
+## Su Mo Tu We Th Fr Sa   Su Mo Tu We Th Fr Sa   Su Mo Tu We Th Fr Sa
+##                 1  2       1  2  3  4  5  6       1  2  3  4  5  6
+##  3  4  5  6  7  8  9    7  8  9 10 11 12 13    7  8  9 10 11 12 13
+## 10 11 12 13 14 15 16   14 15 16 17 18 19 20   14 15 16 17 18 19 20
+## 17 18 19 20 21 22 23   21 22 23 24 25 26 27   21 22 23 24 25 26 27
+## 24 25 26 27 28 29 30   28                     28 29 30 31
+## 31
+##         April                   May                   June        
+## Su Mo Tu We Th Fr Sa   Su Mo Tu We Th Fr Sa   Su Mo Tu We Th Fr Sa
+##              1  2  3                      1          1  2  3  4  5
+##  4  5  6  7  8  9 10    2  3  4  5  6  7  8    6  7  8  9 10 11 12
+## 11 12 13 14 15 16 17    9 10 11 12 13 14 15   13 14 15 16 17 18 19
+## 18 19 20 21 22 23 24   16 17 18 19 20 21 22   20 21 22 23 24 25 26
+## 25 26 27 28 29 30      23 24 25 26 27 28 29   27 28 29 30
+##                        30 31
+##         July                  August                September     
+## Su Mo Tu We Th Fr Sa   Su Mo Tu We Th Fr Sa   Su Mo Tu We Th Fr Sa
+##              1  2  3    1  2  3  4  5  6  7             1  2  3  4
+##  4  5  6  7  8  9 10    8  9 10 11 12 13 14    5  6  7  8  9 10 11
+## 11 12 13 14 15 16 17   15 16 17 18 19 20 21   12 13 14 15 16 17 18
+## 18 19 20 21 22 23 24   22 23 24 25 26 27 28   19 20 21 22 23 24 25
+## 25 26 27 28 29 30 31   29 30 31               26 27 28 29 30
+## 
+##        October               November               December      
+## Su Mo Tu We Th Fr Sa   Su Mo Tu We Th Fr Sa   Su Mo Tu We Th Fr Sa
+##                 1  2       1  2  3  4  5  6             1  2  3  4
+##  3  4  5  6  7  8  9    7  8  9 10 11 12 13    5  6  7  8  9 10 11
+## 10 11 12 13 14 15 16   14 15 16 17 18 19 20   12 13 14 15 16 17 18
+## 17 18 19 20 21 22 23   21 22 23 24 25 26 27   19 20 21 22 23 24 25
+## 24 25 26 27 28 29 30   28 29 30               26 27 28 29 30 31
+## 31
+```</code></pre>
 <p><code>cal 2021</code> shows the calender of 2021.</p>
+<pre><code>```bash
+cal 9 1752
+```
+
+```
+##    September 1752   
+## Su Mo Tu We Th Fr Sa
+##        1  2 14 15 16
+## 17 18 19 20 21 22 23
+## 24 25 26 27 28 29 30
+```</code></pre>
 <p><code>cal 9 1752</code> shows September of 1752, but it it has the ‘lost’ 11 days of September 1752, skipped when Britain changed over from the Julian calendar to the Gregorian calendar, bringing us into line with most of Europe.</p>
+<pre><code>```bash
+date
+```
+
+```
+## Thu Feb 10 23:24:10 UTC 2022
+```</code></pre>
 <p><code>date</code>shows the date and time now.</p>
+<pre><code>```bash
+hostname
+```
+
+```
+## biostat-203b-teaching-server
+```</code></pre>
 <p><code>hostname</code>shows the host name of server.</p>
+<pre><code>```bash
+arch
+```
+
+```
+## x86_64
+```</code></pre>
 <p><code>arch</code> prints out the current operating system.</p>
+<pre><code>```bash
+uname -a
+```
+
+```
+## Linux biostat-203b-teaching-server 3.10.0-1160.49.1.el7.x86_64 #1 SMP Tue Nov 30 15:51:32 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
+```</code></pre>
 <p><code>uname -a</code> shows the name, version and other details about the current machine and the operating system running on it.</p>
+<pre><code>```bash
+uptime
+```
+
+```
+##  23:24:10 up  1:49,  1 user,  load average: 0.30, 0.08, 0.07
+```</code></pre>
 <p><code>uptime</code> shows information about how long the system has been running together with the current time and users.</p>
+<pre><code>```bash
+who am i
+```</code></pre>
 <p><code>who am i</code> shows the name of the user and the time.</p>
+<pre><code>```bash
+who
+```
+
+```
+## huazhou  pts/0        2022-02-10 22:56 (76.93.103.195)
+```</code></pre>
 <p><code>who</code> shows the information about currently logged in user on to system.</p>
+<pre><code>```bash
+w
+```
+
+```
+##  23:24:10 up  1:49,  1 user,  load average: 0.30, 0.08, 0.07
+## USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
+## huazhou  pts/0    76.93.103.195    22:56   27:38   0.00s  0.00s -bash
+```</code></pre>
 <p><code>w</code> show who is logged on and what they are doing in the server.</p>
+<pre><code>```bash
+id
+```
+
+```
+## uid=1009(fangyi) gid=1011(fangyi) groups=1011(fangyi)
+```</code></pre>
 <p><code>id</code> shows the uid gid and groupid of me.</p>
+<pre><code>```bash
+last | head
+```
+
+```
+## huazhou  pts/0        76.93.103.195    Thu Feb 10 22:56   still logged in   
+## huazhou  pts/0        76.93.103.195    Thu Feb 10 22:08 - 22:29  (00:21)    
+## huazhou  pts/0        76.93.103.195    Thu Feb 10 22:02 - 22:07  (00:04)    
+## reboot   system boot  3.10.0-1160.49.1 Thu Feb 10 21:34 - 23:24  (01:49)    
+## huazhou  pts/1        76.93.103.195    Thu Feb 10 20:57 - 21:29  (00:31)    
+## maschepp pts/0        74.213.228.243   Thu Feb 10 19:47 - 19:47  (00:00)    
+## huazhou  pts/1        108-64-58-205.li Thu Feb 10 00:23 - 00:24  (00:00)    
+## huazhou  pts/0        108-64-58-205.li Wed Feb  9 17:59 - 22:05  (04:06)    
+## qzhang42 pts/8        s-169-232-70-228 Wed Feb  9 08:09 - 11:31  (03:21)    
+## qzhang42 pts/10       s-169-232-70-228 Wed Feb  9 08:03 - 08:05  (00:02)
+```</code></pre>
 <p><code>last | head</code>: <code>last</code> display the list of all the users logged in and out, and <code>head</code> shows the first 10 records.</p>
+<pre><code>```bash
+echo {con,pre}{sent,fer}{s,ed}
+```
+
+```
+## consents consented confers confered presents presented prefers prefered
+```</code></pre>
 <p><code>echo {con,pre}{sent,fer}{s,ed}</code> shows the different combination of words using <code>con,pre</code> <code>sent,fer</code> and <code>s,ed</code>.</p>
+<pre><code>```bash
+time sleep 5
+```
+
+```
+## 
+## real 0m5.003s
+## user 0m0.000s
+## sys  0m0.001s
+```</code></pre>
 <p><code>time sleep 5</code>: <code>sleep</code> let the system delay for 5 second, and <code>time</code> shows the real-time, user CPU time and system CPU time spent by executing a command when it terminates.</p>
+<pre><code>```bash
+history | tail
+```</code></pre>
 <p><code>history | tail</code> shows the last few history command.</p>
 </div>
 </div>
