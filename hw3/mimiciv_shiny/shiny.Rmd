@@ -1,0 +1,37 @@
+
+
+```{r, echo = TRUE, eval = FALSE}
+library(shiny)
+icu_cohort <- 
+  readRDS("~/homework-203B-2022-Winter/hw3/mimiciv_shiny/icu_cohort.rds")
+
+ui <- fluidPage(
+  titlePanel("ICU Cohort Data"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput(inputId = "choice",
+                  label = "choose a demographic variable:",
+                  choices = c("ethnicity" = "ethnicity",
+                              "language" = "language", 
+                              "insurance" = "insurance", 
+                              "maritalstatus" = "marital_status", 
+                              "gender" = "gender", 
+                              "age at hospital admission" = "anchor_age")
+      )),
+    mainPanel(
+      plotOutput(outputId = "distPlot")
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$distPlot <- renderPlot({
+ggplot(icu_cohort, aes_string(x = input$choice, fill = "thirty_day")) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom")
+    })
+}
+    
+    shinyApp(ui = ui, server = server)
+```
