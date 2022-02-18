@@ -1,8 +1,8 @@
 *Yi Fang*
 
-### Overall Grade: 163/180
+### Overall Grade: 166/180
 
-### Quality of report: 10/10
+### Quality of report: 13/10
 
 -   Is the homework submitted (git tag time) before deadline? 
 
@@ -10,7 +10,7 @@
   
 -   Is the final report in a human readable format html? 
 
-    Yes
+    Yes. Best graphics I have seen yet. `+3`.
   
 -   Is the report prepared as a dynamic document (R markdown) for better reproducibility?
 
