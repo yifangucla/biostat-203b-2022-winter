@@ -152,7 +152,6 @@ admonthplot <-
   labs(x = "month", y = "frequency",
        title = "ICU Admission Frequency by Month") +
   theme(plot.title = element_text(hjust = 0.5))
-admonthplot
 ```
 ```{r}
 admdayplot <-
@@ -378,8 +377,10 @@ chartevents_tble <- chartevents_tble %>%
 ggplot(chartevents_tble, aes(x = factor(veid))) +
   geom_bar(fill = "lightblue", colour = "black") +
     labs(x = "Vital Measurements", ylab = "Count", 
-       title = "The Count of The First Vital Measurement Done to a Patient in ICU") +
-  geom_text(aes(label = ..count..), stat = "count", vjust = -0.2, color = "black") +
+         title = 
+        "The Count of The First Vital Measurement Done to a Patient in ICU") +
+  geom_text(aes(label = ..count..), 
+            stat = "count", vjust = -0.2, color = "black") +
   scale_x_discrete(labels = c("220045" = "heart rate",
                               "220181" = "mean non-invasive blood pressure",
                               "220179" = "systolic non-invasive blood pressure",
