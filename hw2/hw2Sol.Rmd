@@ -415,6 +415,8 @@ mimic_icu_cohort <-
   inner_join(labevents_tble, by = "subject_id") %>%
   inner_join(chartevents_tble, by = "subject_id")
 mimic_icu_cohort <-
+  mutate(age_hadm = anchor_age + year(admittime) - anchor_year) %>% 
+  filter((age_hadm) > 18) %>% 
   add_column(mimic_icu_cohort, thirty_day_mort = if_else(
     difftime(mimic_icu_cohort$deathtime,
              mimic_icu_cohort$admittime, unit = "day") <= 30,
@@ -516,15 +518,61 @@ ggplot(mimic_icu_cohort, aes(x = anchor_age, fill = thirty_day_mort)) +
 
 - `thirty_day_mort` vs first lab measurements
 ```{r}
-
+ggplot(mimic_icu_cohort, aes(x = factor(itemid), fill = thirty_day_mort)) +
+  geom_bar(color = "grey6", position = "fill", width = 0.7) +
+  labs(x = "Lab Measurements", y = "Percentage of Death", fill = "",
+       title = "The 30 Day Mortality Rate By First Lab Measurements") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1") +
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', position = position_fill(vjust = 0.5), size = 3) +
+  scale_x_discrete(labels = c("50912" = "creatinine",
+                              "50971" = "potassium",
+                              "50983" = "sodium",
+                              "50902" = "chloride",
+                              "50882" = "bicarbonate",
+                              "51221" = "hematocrit",
+                              "51301" = "white blood cell count",
+                              "50931" = "glucose",
+                              "50960" = "magnesium",
+                              "50893" = "calcium")) 
 ```
 
 - `thirty_day_mort` vs first vital measurements
 ```{r}
-
+ggplot(mimic_icu_cohort, aes(x = factor(veid), fill = thirty_day_mort)) +
+  geom_bar(color = "grey6", position = "fill", width = 0.7) +
+  labs(x = "Vital Measurements", y = "Percentage of Death", fill = "",
+       title = "The 30 Day Mortality Rate By Vital Measurements") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1") +
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', position = position_fill(vjust = 0.5)) +
+  scale_x_discrete(labels = c("220045" = "heart rate",
+                              "220181" = "mean non-invasive blood pressure",
+                              "220179" = "systolic non-invasive blood pressure",
+                              "223761" = "body temperature in Fahrenheit",
+                              "220210" = "respiratory rate"))
 ```
 
 - `thirty_day_mort` vs first ICU unit
 ```{r}
-
+ggplot(mimic_icu_cohort, aes(x = first_careunit, fill = thirty_day_mort)) +
+  geom_bar(color = "grey6", position = "fill", width = 0.7) +
+  labs(x = "ICU Unit", y = "Percentage of Death", fill = "",
+       title = "The 30 Day Mortality Rate By First ICU Unit") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1") +
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', position = position_fill(vjust = 0.5),
+            size = 3, color = "grey1")
 ```
