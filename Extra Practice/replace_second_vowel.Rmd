@@ -26,3 +26,7 @@ y <- str_extract(x, "([aeiou].*?[aeiou])") %>%
   str_replace( ".$", "-") 
 str_replace(x, "([aeiou].*?[aeiou])", y)
 ```
+```{r}
+x <- c("apple", "pear", "banana", "nut")
+str_replace(x, "([aeiou])(.*?)([aeiou])", "\\1\\2-")
+```
