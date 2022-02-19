@@ -21,7 +21,7 @@ ui <- fluidPage(
       conditionalPanel(condition = "input.category == 'demographic'",
                   selectInput(inputId = "demochoice",
                   label = "Choose a Demographic Variable:",
-                  choices = c("Choose One" = "",
+                  choices = c("Choose One" = " ",
                               "ethnicity" = "ethnicity",
                               "language" = "language", 
                               "insurance" = "insurance", 
@@ -32,7 +32,7 @@ ui <- fluidPage(
       conditionalPanel(condition = "input.category == 'lab'",
                   selectInput(inputId = "labchoice",
                   label = "Choose a Lab Measurement:",
-                  choices = c("Choose One" = "",
+                  choices = c("Choose One" = " ",
                               "creatinine" = "creatinine",
                               "potassium" = "potassium",
                               "sodium" = "sodium",
@@ -48,7 +48,7 @@ ui <- fluidPage(
       conditionalPanel(condition = "input.category == 'chart'",
                   selectInput(inputId = "chartchoice",
                   label = "Choose a Vital Measurement:",
-                  choices = c("Choose One" = "",
+                  choices = c("Choose One" = " ",
                               "heart rate" = "heart_rate",
                               "mean non invasive blood pressure" = "mean_non_invasive_blood_pressure",
                               "systolic non invasive blood pressure" = "systolic_non_invasive_blood_pressure",
@@ -57,22 +57,52 @@ ui <- fluidPage(
                               ))
                   ),
       
-    mainPanel(plotOutput(outputId = "distPlot")
-    )
+    mainPanel(
+      
+    conditionalPanel(
+      condition = "inputId == 'demochoice'",
+      plotOutput(outputId = "demoPlot")),
+
+    conditionalPanel(
+        condition = "inputId == 'labchoice'",
+       plotOutput(outputId = "labPlot")),
+    
+    conditionalPanel(
+        condition = "inputId == 'chartchoice'",
+       plotOutput(outputId = "chartPlot"))
+    
+      )
   )
 )
 
 
-
 server <- function(input, output) {
-  output$distPlot <- renderPlot({
-    
+  
+  output$demoPlot <- renderPlot({
 ggplot(icu_cohort, aes_string(x = input$demochoice, fill = "thirty_day")) +
   geom_bar() +
+  labs(x = input$demochoice, y = "Percentage of Death", fill = "") +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer()
+    })
+
+  output$labPlot <- renderPlot({
+ggplot(icu_cohort, aes_string(x = input$labchoice, fill = "thirty_day")) +
+  geom_density() +
   theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
   theme(legend.position = "bottom")
-        
+    })  
+
+    output$chartPlot <- renderPlot({
+ggplot(icu_cohort, aes_string(x = input$chartchoice, fill = "thirty_day")) +
+  geom_density() +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
+  theme(legend.position = "bottom")
     })
+    
 }
  
 
