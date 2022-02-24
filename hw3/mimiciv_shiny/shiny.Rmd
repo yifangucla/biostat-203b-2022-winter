@@ -7,52 +7,44 @@ icu_cohort <-
   readRDS("~/homework-203B-2022-Winter/hw3/mimiciv_shiny/icu_cohort.rds")
 
 ui <- fluidPage(
-  titlePanel("ICU Cohort Data"),
+  titlePanel("30 Day Mortality Rate V.S. Different Variables"),
   sidebarLayout(
     sidebarPanel(
-
+  
       selectInput(inputId = "category",
         label = "Choose a Category:",
-        choices = c("Choose One" = "",
-                    "Demographic Information" = "demographic",
-                    "Lab Measurements Value" = "lab",
-                    "Vital Measurements Value" = "chart")),
+        choices = c("Discrete Variable" = "demographic",
+                    "Continuous Variable" = "lab")),
       
       conditionalPanel(condition = "input.category == 'demographic'",
                   selectInput(inputId = "demochoice",
-                  label = "Choose a Demographic Variable:",
-                  choices = c("Choose One" = " ",
-                              "ethnicity" = "ethnicity",
+                  label = "Choose a discrete variable:",
+                  choices = c("ethnicity" = "ethnicity",
                               "language" = "language", 
                               "insurance" = "insurance", 
                               "maritalstatus" = "marital_status", 
-                              "gender" = "gender", 
-                              "age at hospital admission" = "anchor_age"))),
+                              "gender" = "gender",
+                              "First ICU Unit" = "first_careunit"),
+                  selected = "gender")),
       
       conditionalPanel(condition = "input.category == 'lab'",
                   selectInput(inputId = "labchoice",
-                  label = "Choose a Lab Measurement:",
-                  choices = c("Choose One" = " ",
+                  label = "Choose a continuous variable:",
+                  choices = c("age" = "anchor_age",
                               "creatinine" = "creatinine",
                               "potassium" = "potassium",
                               "sodium" = "sodium",
                               "chloride" = "chloride",
                               "bicarbonate" = "bicarbonate",
                               "hematocrit" = "hematocrit",
-                              "white blood cell count" = "white_blood_cell_count",
+                            "white blood cell count" = "white_blood_cell_count",
                               "glucose" = "glucose",
                               "magnesium" = "magnesium",
-                              "calcium" = "calcium")
-                              )),
-            
-      conditionalPanel(condition = "input.category == 'chart'",
-                  selectInput(inputId = "chartchoice",
-                  label = "Choose a Vital Measurement:",
-                  choices = c("Choose One" = " ",
+                              "calcium" = "calcium",
                               "heart rate" = "heart_rate",
-                              "mean non invasive blood pressure" = "mean_non_invasive_blood_pressure",
-                              "systolic non invasive blood pressure" = "systolic_non_invasive_blood_pressure",
-                              "body temperature in Fahrenheit" = "body_temperature_in_Fahrenheit",
+"mean non invasive blood pressure" = "mean_non_invasive_blood_pressure",
+"systolic non invasive blood pressure" = "systolic_non_invasive_blood_pressure",
+"body temperature in Fahrenheit" = "body_temperature_in_Fahrenheit",
                               "respiratory rate" = "respiratory_rate")
                               ))
                   ),
@@ -67,10 +59,6 @@ ui <- fluidPage(
         condition = "inputId == 'labchoice'",
        plotOutput(outputId = "labPlot")),
     
-    conditionalPanel(
-        condition = "inputId == 'chartchoice'",
-       plotOutput(outputId = "chartPlot"))
-    
       )
   )
 )
@@ -78,30 +66,44 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
+
   output$demoPlot <- renderPlot({
+
 ggplot(icu_cohort, aes_string(x = input$demochoice, fill = "thirty_day")) +
-  geom_bar() +
-  labs(x = input$demochoice, y = "Percentage of Death", fill = "") +
+  geom_bar(color = "grey6", position = "fill", width = 0.7) +
+  labs(x = input$demochoice, y = "Percentage of Death", fill = "",
+       title = paste("The 30 Day Mortality Rate By", input$demochoice),
+       caption = "The red FALSE means NOT dead in 30 days, 
+       and the blue TRUE means dead in 30 days") +
   theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
   theme(legend.position = "bottom") +
   theme(plot.title = element_text(hjust = 0.5)) +
   scale_y_continuous(labels = scales::percent) +
-  scale_fill_brewer()
+  scale_fill_brewer(palette = "Pastel1") +
+  geom_text(aes(label = scales::percent(..count../sum(..count..))),
+            stat = 'count', position = position_fill(vjust = 0.5)) +
+  scale_x_discrete(labels = c("F" = "Female",
+                              "M" = "Male",
+                              "?" = "Other Languages",
+                              "FALSE" = "Not died in 30 days"))
+
     })
 
   output$labPlot <- renderPlot({
+    
 ggplot(icu_cohort, aes_string(x = input$labchoice, fill = "thirty_day")) +
-  geom_density() +
+  geom_density(color = "grey6", position = "fill") +
+  labs(x = input$labchoice, y = "Percentage of Death", fill = "",
+       title = paste("The 30 Day Mortality Rate By", input$labchoice),
+       caption = "The red FALSE means NOT dead in 30 days, 
+       and the blue TRUE means dead in 30 days") +
   theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom") +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_fill_brewer(palette = "Pastel1")
+    
     })  
-
-    output$chartPlot <- renderPlot({
-ggplot(icu_cohort, aes_string(x = input$chartchoice, fill = "thirty_day")) +
-  geom_density() +
-  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1)) +
-  theme(legend.position = "bottom")
-    })
     
 }
  
