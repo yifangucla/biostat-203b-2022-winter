@@ -43,9 +43,12 @@ Multiple Imputation by Chained Equations is a robust, informative method of deal
 
 3. Perform a data quality check of the ICU stays data. Discard variables with substantial missingness, say >5000 `NA`s. Replace apparent data entry errors by `NA`s.
 
+First, I manually check which data have substantial missingness, and I find that `marital status` and `calcium` are 2 variables with more than 4000 missing value, so I only keep the variables that are related.
+Then, I check the remainning variables, and I do not find any apparent data entry errors, so I do not replace apparent data entry errors by `NA`s.
+
 ```{r}
 icu_cohort <- readRDS("~/homework-203B-2022-Winter/hw3/mimiciv_shiny/icu_cohort.rds")
-#First, I manually check which data have substantial missingness, and I find that `marital status` and `calcium` are 2 variables with more than 4000 missing value, so I only keep the variables that are related.
+
 colSums(is.na(icu_cohort))
 icu_cohort <- icu_cohort %>%
   select(ethnicity,
@@ -68,18 +71,19 @@ icu_cohort <- icu_cohort %>%
   systolic_non_invasive_blood_pressure,
   body_temperature_in_Fahrenheit,
   respiratory_rate)
-#Then, I check the remainning variables, and I do not find any apparent data entry errors, so I do not replace apparent data entry errors by `NA`s.
 ```
+
 
 4. Impute missing values by `miceRanger` (request $m=3$ data sets). This step is computational intensive. Make sure to save the imputation results as a file. Hint: Setting `max.depth=10` in the `miceRanger` function may cut some computing time.
 
 ```{r}
-mice <- miceRanger(
-    icu_cohort, 
-    m=3,
-    verbose = FALSE,
-    max.depth=10)
-write_rds(mice, "~/homework-203B-2022-Winter/hw4/mice.rds")
+# mice <- miceRanger(
+#     icu_cohort, 
+#     m=3,
+#     verbose = FALSE,
+#     max.depth=10)
+# write_rds(mice, "~/homework-203B-2022-Winter/hw4/mice.rds")
+mice <- readRDS("~/homework-203B-2022-Winter/hw4/mice.rds")
 ```
 
 5. Make imputation diagnostic plots and explain what they mean.
@@ -89,12 +93,23 @@ plotCorrelations(mice)
 plotModelError(mice)
 ```
 
+The distribution plot of imputed values are created first. The red lines are the original data, and the 3 black lines are the imputed values after the MICE. We can find that in almost all variables, the data matches pretty well.
+The second plot is the correlation plot. This plot shows a boxplot of the correlations between imputed values in every combination of datasets, at each iteration.
+Finally, I plot a OOB error plot. Each model returns the OOB accuracy for classification, and r-squared for regression. We can find that the accuracy for most of the variable are not that good.
+
 6. Choose one of the imputed data sets to be used in Q2. This is **not** a good idea to use just one imputed data set or to average multiple imputed data sets. Explain in a couple of sentences what the correct Multiple Imputation strategy is.
+
+I choose to use the first imputed data set in Q2. We do not want to use a single data set, because a single data set may not be perfect or accurate. We want to use different imputed data sets, after examining the errors of the data set.
 
 
 ## Q2. Predicting 30-day mortality
 
 Develop at least two analytic approaches for predicting the 30-day mortality of patients admitted to ICU using demographic information (gender, age, marital status, ethnicity), first lab measurements during ICU stay, and first vital measurements during ICU stay. For example, you can use (1) logistic regression (`glm()` function in base R or keras), (2) logistic regression with lasso penalty (glmnet or keras package), (3) random forest (randomForest package), or (4) neural network (keras package).
+
+```{r}
+dataList <- completeData(mice)
+head(dataList[[1]],10)
+```
 
 1. Partition data into 80% training set and 20% test set. Stratify partitioning according the 30-day mortality status.
 
