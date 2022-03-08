@@ -99,7 +99,8 @@ Finally, I plot a OOB error plot. Each model returns the OOB accuracy for classi
 
 6. Choose one of the imputed data sets to be used in Q2. This is **not** a good idea to use just one imputed data set or to average multiple imputed data sets. Explain in a couple of sentences what the correct Multiple Imputation strategy is.
 
-I choose to use the first imputed data set in Q2. We do not want to use a single data set, because a single data set may not be perfect or accurate. We want to use different imputed data sets, after examining the errors of the data set.
+I choose to use the first imputed data set in Q2. 
+We do not want to use a single data set, because a single data set may not be perfect or accurate. We want to use different imputed data sets, and analysis all the data sets, then integrate the result of all the data sets. I will use only one data set in this homework for the time reason.
 
 
 ## Q2. Predicting 30-day mortality
