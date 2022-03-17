@@ -87,11 +87,13 @@ Display the number of lines in each data file using a similar loop.
     ```
 
     ```{bash}
-   zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk 'END { print NR }' 
+   zcat /mnt/mimiciv/1.0/core/admissions.csv.gz |
+   awk 'END { print NR }' 
     ```
 There are 523741 rows in this data file, including the title row.   
     ```{bash}
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{if(NR>1){print $1} }' | sort | uniq | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz |
+awk -F, '{if(NR>1){print $1} }' | sort | uniq | wc -l
     ```
 There are 256878 unique patients in this data file.
 
@@ -99,19 +101,23 @@ There are 256878 unique patients in this data file.
 
 **Admission_type**
     ```{bash}
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{if(NR>1){print $6} }' | sort | uniq -c
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz |
+awk -F, '{if(NR>1){print $6} }' | sort | uniq -c
     ```
 **Admission_location**
     ```{bash}
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{if(NR>1){print $7} }' | sort | uniq -c
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz |
+awk -F, '{if(NR>1){print $7} }' | sort | uniq -c
     ```
 **Insurance**
     ```{bash}
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{if(NR>1){print $9} }' | sort | uniq -c
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz |
+awk -F, '{if(NR>1){print $9} }' | sort | uniq -c
     ```
 **Ethnicity**
     ```{bash}
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{if(NR>1){print $12} }' | sort | uniq -c
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz |
+awk -F, '{if(NR>1){print $12} }' | sort | uniq -c
     ```
     
 ## Q4. Who's popular in Price and Prejudice
@@ -163,35 +169,67 @@ the hash-bang (#!) tells the operating system what interpreter to use to run the
 ### Q5. More fun with Linux
 
 Try following commands in Bash and interpret the results: `cal`, `cal 2021`, `cal 9 1752` (anything unusual?), `date`, `hostname`, `arch`, `uname -a`, `uptime`, `who am i`, `who`, `w`, `id`, `last | head`, `echo {con,pre}{sent,fer}{s,ed}`, `time sleep 5`, `history | tail`.
-
+    ```{bash}
+cal
+    ```
 `cal` shows the calender of this month and today.
-
+    ```{bash}
+    cal 2021
+    ```
 `cal 2021` shows the calender of 2021.
-
+    ```{bash}
+cal 9 1752
+    ```
 `cal 9 1752` shows September of 1752, but it it has the 'lost' 11 days of September 1752, skipped when Britain changed over from the Julian calendar to the Gregorian calendar, bringing us into line with most of Europe.
-
+    ```{bash}
+date
+    ```
  `date`shows the date and time now.
- 
+    ```{bash}
+hostname
+    ```
  `hostname`shows the host name of server.
- 
+    ```{bash}
+arch
+    ``` 
  `arch` prints out the current operating system.
- 
+    ```{bash}
+uname -a
+    ``` 
  `uname -a` shows the name, version and other details about the current machine and the operating system running on it.
- 
+    ```{bash}
+uptime
+    ``` 
  `uptime` shows information about how long the system has been running together with the current time and users.
- 
+    ```{bash}
+who am i
+    ``` 
  `who am i` shows the name of the user and the time.
- 
+    ```{bash}
+who
+    ``` 
  `who` shows the information about currently logged in user on to system. 
- 
+    ```{bash}
+w
+    ``` 
  `w` show who is logged on and what they are doing in the server.
- 
+    ```{bash}
+id
+    ``` 
  `id` shows the uid gid and groupid of me.
- 
+    ```{bash}
+last | head
+    ``` 
  `last | head`: `last` display the list of all the users logged in and out, and `head` shows the first 10 records.
- 
+    ```{bash}
+echo {con,pre}{sent,fer}{s,ed}
+    ``` 
  `echo {con,pre}{sent,fer}{s,ed}` shows the different combination of words using `con,pre` `sent,fer` and `s,ed`.
- 
+    ```{bash}
+time sleep 5
+    ``` 
  `time sleep 5`: `sleep` let the system delay for 5 second, and `time` shows the real-time, user CPU time and system CPU time spent by executing a command when it terminates.
- 
+    ```{bash}
+history | tail
+    ``` 
  `history | tail` shows the last few history command.
